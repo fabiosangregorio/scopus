@@ -1,14 +1,34 @@
 Scopus Search
 -------------
 
-:doc:`ScopusSearch <../reference/scopus.ScopusSearch>` implements the `Scopus Search API <https://api.elsevier.com/documentation/SCOPUSSearchAPI.wadl>`_.  It performs a query to search for articles and then retrieves the records of the query.
+:doc:`ScopusSearch <../reference/pybliometrics.ScopusSearch>` implements the `Scopus Search API <https://api.elsevier.com/documentation/SCOPUSSearchAPI.wadl>`_.  It performs a query to search for articles and then retrieves the records of the query.
 
-The class is initialized with a search query on which you can read about in `Scopus Search Guide <https://dev.elsevier.com/tips/ScopusSearchTips.htm>`_.  Keep in mind that an invalid search query will result in an error.
+The class is initialized with a search query.  Any query that works in the `Advanced Search on scopus.com <https://www.scopus.com/search/form.uri?display=advanced>`_ will work.  An invalid search query will result in an error.
 
 .. code-block:: python
    
-    >>> from scopus import ScopusSearch
-    >>> s = ScopusSearch('FIRSTAUTH ( kitchin  j.r. )', refresh=True)
+    >>> from pybliometrics.scopus import ScopusSearch
+    >>> s = ScopusSearch('FIRSTAUTH ( kitchin  j.r. )')
+
+
+Non-subscribers must instantiate the class with `subscriber=False`.  They may only get 5000 results per query, whereas this limit does not exist for subscribers.
+
+Users can recieve the number of results programmatically via `.get_results_size()`:
+
+.. code-block:: python
+
+    >>> s.get_results_size()
+    12
+
+
+This method works even if one chooses to not download results.  It thus helps subscribers to decide programmatically if one wants to proceed downloading or not:
+
+.. code-block:: python
+   
+    >>> from pybliometrics.scopus import ScopusSearch
+    >>> other = ScopusSearch('AUTHLASTNAME(Brown)', download=False)
+    >>> other.get_results_size()
+    259526
 
 
 The class' main attribute `results` returns a list of `namedtuples <https://docs.python.org/2/library/collections.html#collections.namedtuple>`_.  They can be used neatly with `pandas <https://pandas.pydata.org/>`_ to form DataFrames:
@@ -18,8 +38,8 @@ The class' main attribute `results` returns a list of `namedtuples <https://docs
     >>> import pandas as pd
     >>> df = pd.DataFrame(pd.DataFrame(s.results))
     >>> df.columns
-    Index(['eid', 'doi', 'pii', 'pubmed_id', 'title', 'subtype', 'creator', 'afid',
-       'affilname', 'affiliation_city', 'affiliation_country', 'author_count',
+    Index(['eid', 'doi', 'pii', 'pubmed_id', 'title', 'subtype', 'subtypeDescription', 'creator',
+       'afid', 'affilname', 'affiliation_city', 'affiliation_country', 'author_count',
        'author_names', 'author_ids', 'author_afids', 'coverDate',
        'coverDisplayDate', 'publicationName', 'issn', 'source_id', 'eIssn',
        'aggregationType', 'volume', 'issueIdentifier', 'article_number',
@@ -129,14 +149,31 @@ The class' main attribute `results` returns a list of `namedtuples <https://docs
     4     None     undefined                         None
 
 
-The EIDs can be used for the `AbstractRetrieval <../reference/scopus.AbstractRetrieval.html>`_ class and the Scopus Author IDs in column "authid" for the `AuthorRetrieval <../reference/scopus.AuthorRetrieval.html>`_ class.
+The EIDs can be used for the `AbstractRetrieval <../reference/pybliometrics.AbstractRetrieval.html>`_ class and the Scopus Author IDs in column "authid" for the `AuthorRetrieval <../reference/pybliometrics.AuthorRetrieval.html>`_ class.
 
-The Scopus API allows a differing information depth via
-`views <https://dev.elsevier.com/guides/ScopusSearchViews.htm>`_.  The view 'COMPLETE' is the highest unrestricted view and contains all information also included in the 'STANDARD' view.  It is therefore the default view.  However, when speed is an issue to you, go for the STANDARD view, because the STANDARD view allows faster querying.  Note that the view parameter does not take effect for cached files, i.e. to switch to another view set `refresh=True` as well.
+There are sometimes missing fields in the returned results although it exists in the Scopus database.  For example, the EID may be missing, even though every element always has an EID.  This is not a bug of `pybliometrics`.  Instead it is somehow related to a problem in the download process from the Scopus database.  To check for completeness of specific fields, use parameter `integrity_fields`, which accepts any iterable.  Using parameter `integrity_action` you can choose between two actions on what to do if the integrity check fails: Set `integrity_action="warn"` to issue a UserWarning, or set `integrity_action="raise"` to raise an AttributeError.
 
-Note that the view parameter does not take effect for cached files, i.e. to switch to another view set `refresh=True` as well.
+.. code-block:: python
+   
+    >>> s = ScopusSearch('FIRSTAUTH ( kitchin  j.r. )', integrity_fields=["eid"], integrity_action="warn")
 
-For convenience, method `s.get_eids()` returns the list of EIDs (similar to attribute `EIDS` in scopus 0.x):
+
+If you care about integrity of specific fields, you can attempt to refresh the downloaded file:
+
+.. code-block:: python
+   
+    def robust_query(q, refresh=False):
+        """Wrapper function for individual ScopusSearch query."""
+        try:
+            return ScopusSearch(q, refresh=refresh).results
+        except AttributeError:
+            return ScopusSearch(q, refresh=True).results
+
+
+The Scopus Search API allows a differing information depth via
+`views <https://dev.elsevier.com/guides/ScopusSearchViews.htm>`_.  The view 'COMPLETE' is the highest unrestricted view and contains all information also included in the 'STANDARD' view.  It is therefore the default view.  However, when speed is an issue, choose the STANDARD view.
+
+For convenience, method `s.get_eids()` returns the list of EIDs:
 
 .. code-block:: python
 

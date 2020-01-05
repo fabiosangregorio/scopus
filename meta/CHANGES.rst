@@ -3,6 +3,127 @@ Change Log
 
 .. toctree::
 
+2.2.2
+~~~~~
+
+2019-12-29
+
+* EIDs starting with "1-s2.0-" are automatically detected as EID as well.
+* In `ScopusSearch().results` add field "subtypeDescription".
+* In `AbstractRetrieval().idxterms` return None instead of empty lists.
+* In `AbstractRetrieval().confdate` return None instead of list with tuples with None.
+* Add UserWarning for change of type of `AuthorRetrieval().affiliation_current` and `AuthorRetrieval().affiliation_history`.
+
+2.2.1
+~~~~~
+
+2019-09-09
+
+* Add user agent string to evaluate usage.
+* Fix bug with missing journal metrics in `SerialTitle()`.
+
+2.2
+~~~
+
+2019-08-21
+
+* Add parameters `integrity_fields` and `integrity_action` to all search classes to avoid KeyErrors of missing fields.
+* Add progress bar to all search classes indicating download progress.
+* Fix bug with missing entries in author-group list in `AbstractRetrieval()`.
+
+2.1.3
+~~~~~
+
+2019-07-16
+
+* Fix bug detecting DOIs without slash in `AbstractRetrieval()`.
+* Fix bug related to creating the config file.
+
+2.1.2
+~~~~~
+
+2019-07-09
+
+* Fix bugs arising from passing duplicate parameters through kwds in Search classes.
+* Fix bug in `AbstractRetrieval().references` with duplicte volume/issue information from Scopus.
+* Fix bug with wrong object type when using `AuthorRetrieval().get_coauthors()`.
+
+2.1.1
+~~~~~
+
+2019-06-26
+
+* New properties for `AbstractRetrieval()`: `pii` and `pubmed_id`.
+* Improve documentation (`AbstractRetrieval().idxterms` and download machine).
+* Fix bug forcing the presence of the package `scopus`.
+
+2.1.0
+~~~~~
+
+2019-06-17
+
+* Rename package to pybliometrics
+* In all search classes, properties return None if download=False instead of raising an error.
+
+2.0.1
+~~~~~
+
+2019-06-08
+
+* In `AbstractRetrieval().references`, add field "type" for the status of the parsed reference.
+* Raise proper Scopus.exception even when no Scopus-supplied error message exists.
+* In `AbstractRetrieval()`, update docstrings.
+* Fix bug related to creating the config when the config doesn't exist.
+* Fix bug when using `AbstractRetrieval()` in Python 2.
+
+2.0
+~~~
+
+2019-05-28
+
+* Cache files in subfolders according to the used view.
+* Add method `.estimate_uniqueness()` to `AuthorRetrieval()` to estimate how unique an author profile is.
+* Use error message provided by Scopus for ScopusErrors.
+* Add tip how to deal with "KeyError: 'eid'".
+* Remove deprecated classes, modules, parameters and attributes.  Removed deprecated classes are `ScopusAbstract()`, `ScopusAffiliation()`, `ScopusAuthor()` and `report()`.  Removed deprecated parameters are start and max_entries in `AuthorSearch()` and `AffiliationSearch()`.  Removed deprecated attributes include only `ScopusSearch.EIDS`.
+
+1.6.1
+~~~~~
+
+2019-05-14
+
+* Add support for proxies.
+* In `AbstractRetrieval.correspondence`, turn values into proper strings.
+* Fix bug when creating the config file.
+
+1.6
+~~~
+
+2019-05-09
+
+* SerialTitle class to access the Serial Title API.
+* In all search classes, add method `.get_results_size()` to return the number of matches.
+* In all search classes, add boolean parameter `download` to not download the results (but get the number of matches anyways).
+* In `AbstractRetrieval.authogroup`, rename field "city-group" to "city" and add new fields: "dptid", "postalcode", "addresspart".
+* In `AbstractRetrieval.authorgroup`, fix bug with missing affiliation information.
+* In all search classes, remove deprecated paramter `start`.
+
+1.5
+~~~
+
+2019-05-16
+
+* Add parameter `subscriber` to `ScopusSearch` class to set request parameters to maximum values depending on view.
+* Add support for cursor-navigation in searches.
+* Add `__citation__` dunder.
+* Allow for the REF view in `AbstractRetrieval` to obtain detailed information on referenced items.
+* New properties for `AuthorRetrieval`: `historical_identifier` and `status`.
+* Allow `ScopusSearch` to pass on kwds as query params.
+* Deprecate `start` and `max_entries` parameters in `AffiliationSearch` and `AuthorSearch`.
+* Deprecate `start` parameter in `ScopusSearch` class.
+* Fix bug with `ContentAffiliationRetrieval.__str__`.
+* Fix bugs in `AbstractRetrieval` related to missing information obtained from Scopus.
+
 1.4.3
 ~~~~~
 
@@ -26,8 +147,8 @@ Change Log
 2019-01-24
 
 * Add citation
-* Render reports class deprecated
-* Add str-magic function for `CitationOverview` class
+* Render reports class deprecated.
+* Add str-magic function for `CitationOverview` class.
 
 1.4
 ~~~

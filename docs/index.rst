@@ -1,37 +1,42 @@
-scopus: Python-based API-Wrapper to access Scopus
-=================================================
+pybliometrics: Python-based API-Wrapper to access Scopus
+========================================================
 
-scopus is an easy to use Python library to pull, cache and extract data from the Scopus database.
+pybliometrics is an easy to use Python library to pull, cache and extract data from the Scopus database.
+
+.. include:: ../README.rst
+   :start-after: example-begin
+   :end-before: example-end
 
 .. include:: installation.rst
-
 
 =======
 Classes
 =======
 
-scopus provides classes to interact with the various Scopus APIs (see https://dev.elsevier.com/api_docs.html):
+pybliometrics provides one class per Scopus API Access Point (see https://dev.elsevier.com/api_docs.html):
 
-.. currentmodule:: scopus
+.. currentmodule:: pybliometrics
 
 .. autosummary::
 
-   ScopusAbstract
-   ScopusAffiliation
-   ScopusAuthor
-   AffiliationSearch
-   AuthorSearch
-   ScopusSearch
-   CitationOverview
-
+   scopus.AbstractRetrieval
+   scopus.ContentAffiliationRetrieval
+   scopus.AuthorRetrieval
+   scopus.AffiliationSearch
+   scopus.AuthorSearch
+   scopus.ScopusSearch
+   scopus.CitationOverview
+   scopus.SerialTitle
 
 ========
 Citation
 ========
 
-If scopus helped you getting data for research, please cite our corresponding paper:
+If pybliometrics helped you getting data for research, please cite our corresponding paper:
 
-* Rose, Michael E. and John R. Kitchin (2019): "`scopus: Scriptable bibliometrics using a Python interface to Scopus <https://raw.githubusercontent.com/scopus-api/scopus/master/meta/RoseJohn2019_scopus.pdf>`_", Max Planck Institute for Innovation and Competition Research Paper No. 19-03.
+* Rose, Michael E. and John R. Kitchin: "`pybliometrics: Scriptable bibliometrics using a Python interface to Scopus <https://www.sciencedirect.com/science/article/pii/S2352711019300573>`_", SoftwareX 10 (2019) 100263.
+
+Citing the paper helps the development of pybliometrics, because it justifies funneling resources into the development.  It also signals that you obtained data from Scopus in a transparent and replicable way.
 
 ==================
 Indices and tables
@@ -41,10 +46,9 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-
 .. Hidden links for Navigation side panel
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :hidden:
 
    examples
@@ -52,3 +56,5 @@ Indices and tables
    reference
    configuration
    changelog
+   authors
+   contributing
